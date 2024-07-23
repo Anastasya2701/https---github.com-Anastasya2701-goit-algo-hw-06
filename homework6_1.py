@@ -33,7 +33,9 @@ class Record: # Клас для зберігання інформації про
                           return 
               raise ValueError
            
-       def edit_phone(self, phone:str, new_phone:str) -> None: # зміна
+       def edit_phone(self, phone, new_phone): # зміна
+              if not self.is_valid_phone(new_phone):
+                    raise ValueError("Невалідний номер телефону.")
               for number in self.phones:
                      if number.value == phone:
                            number.value = new_phone
@@ -44,7 +46,7 @@ class Record: # Клас для зберігання інформації про
               for number in self.phones:
                      if number.value == phone:
                          return phone
-              raise ValueError("Номер телефону не знайдено.")
+              return None
 
        def __str__(self):
            return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
