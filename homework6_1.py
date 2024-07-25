@@ -13,17 +13,17 @@ class Name(Field):   #Клас для зберігання імені конта
             super().__init__(value)		              
 
 class Phone(Field): #Клас для зберігання номеру телефона. Має валідацію формату.
-	def __init__(self, phone_number:str):
-              if not phone_number.isdigit() or len(phone_number) != 10: # Лише 10 цифр
+	def __init__(self, phone):
+              if not phone.isdigit() or len(phone) != 10: # Лише 10 цифр
                       raise ValueError("Номер телефону має складатись з 10 цифр.") # В іншому випадку помилка
-              super().__init__(phone_number)
+              super().__init__(phone)
        
 class Record: # Клас для зберігання інформації про контакт (ім'я та номер телефону).
-       def __init__(self, name: str):
+       def __init__(self, name):
             self.name = Name(name)
             self.phones = []
 
-       def add_phone(self, phone: str) -> None: # додавання
+       def add_phone(self, phone): # додавання
               self.phones.append(Phone(phone))
 
        def remove_phone(self, phone): # видалення
@@ -33,19 +33,17 @@ class Record: # Клас для зберігання інформації про
                           return 
               raise ValueError
            
-       def edit_phone(self, phone, new_phone): # зміна
-              if not self.is_valid_phone(new_phone):
-                    raise ValueError("Невалідний номер телефону.")
+       def edit_phone(self, old_phone, new_phone): # зміна
               for number in self.phones:
-                     if number.value == phone:
-                           number.value = new_phone
-                           return
+                     if number.value == old_phone:
+                         number.value = new_phone
+                         return
               raise ValueError("Номер телефону не знайдено.")
            
        def find_phone(self, phone): # пошук
               for number in self.phones:
                      if number.value == phone:
-                         return phone
+                         return number
               return None
 
        def __str__(self):
@@ -66,3 +64,35 @@ class AddressBook(UserDict): # Клас для зберігання всіх к�
        def __str__(self):
               return "\n".join(str(record) for record in self.data.values())
        
+# Створення нової адресної книги
+book = AddressBook()
+
+    # Створення запису для John
+john_record = Record("John")
+john_record.add_phone("1234567890")
+john_record.add_phone("5555555555")
+
+    # Додавання запису John до адресної книги
+book.add_record(john_record)
+
+    # Створення та додавання нового запису для Jane
+jane_record = Record("Jane")
+jane_record.add_phone("9876543210")
+book.add_record(jane_record)
+
+    # Виведення всіх записів у книзі
+     
+print(book)
+
+    # Знаходження та редагування телефону для John
+john = book.find("John")
+john.edit_phone("1234567890", "1112223333")
+
+print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+
+    # Пошук конкретного телефону у записі John
+found_phone = john.find_phone("5555555555")
+print(f"{john.name}: {found_phone}")  # Виведення: John: 5555555555
+
+    # Видалення запису Jane
+book.delete("Jane")
