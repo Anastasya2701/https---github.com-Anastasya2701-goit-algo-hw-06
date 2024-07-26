@@ -36,9 +36,10 @@ class Record: # Клас для зберігання інформації про
        def edit_phone(self, old_phone, new_phone): # зміна
               for number in self.phones:
                      if number.value == old_phone:
-                         number.value = new_phone
-                         return
-              raise ValueError("Номер телефону не знайдено.")
+                         number = Phone(new_phone)
+                         break
+                     else:
+                         raise ValueError
            
        def find_phone(self, phone): # пошук
               for number in self.phones:
@@ -47,7 +48,7 @@ class Record: # Клас для зберігання інформації про
               return None
 
        def __str__(self):
-           return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+           return f"Contact name: {self.name.value}, phones: {'; '.join(number.value for number in self.phones)}"
 
 class AddressBook(UserDict): # Клас для зберігання всіх контатів
 
@@ -86,7 +87,7 @@ print(book)
 
     # Знаходження та редагування телефону для John
 john = book.find("John")
-john.edit_phone("1234567890", "1112223333")
+john.edit_phone("1234567890", "5555555555")
 
 print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
