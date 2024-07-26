@@ -34,12 +34,12 @@ class Record: # Клас для зберігання інформації про
               raise ValueError
            
        def edit_phone(self, old_phone, new_phone): # зміна
-              for number in self.phones:
-                     if number.value == old_phone:
-                         number = Phone(new_phone)
-                         break
-                     else:
-                         raise ValueError
+              for ind, number in enumerate(self.phones):
+                     if number.value == old_phone: 
+                            self.phones[ind] = Phone(new_phone)
+                            break
+              else:
+                     raise ValueError
            
        def find_phone(self, phone): # пошук
               for number in self.phones:
